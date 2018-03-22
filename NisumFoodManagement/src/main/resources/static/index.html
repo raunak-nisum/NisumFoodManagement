@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+</style>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+
+window.onload = function() {
+	document.getElementById("exportExcel").disabled = true;
+	};
+	
+	function showDiv(divId){
+		if(divId == "showMonthReportDiv"){
+			document.getElementById("monthReportDiv").style.display = "block";
+			document.getElementById("mainDiv").style.display = "none";
+		}else if(divId == "showDateRangeDiv"){
+			document.getElementById("dateRangeDiv").style.display = "block";
+			document.getElementById("mainDiv").style.display = "none";
+		}else if(divId == "showDateDiv"){
+			document.getElementById("dateDiv").style.display = "block";
+			document.getElementById("mainDiv").style.display = "none";
+		}else if(divId == "showSuggestionDiv"){
+			document.getElementById("suggestionDiv").style.display = "block";
+			document.getElementById("mainDiv").style.display = "none";
+		}		
+		
+		
+	}
+
+function goBack(){
+	document.getElementById("mainDiv").style.display = "block";
+	document.getElementById("monthReportDiv").style.display = "none";
+	document.getElementById("dateRangeDiv").style.display = "none";
+	document.getElementById("dateDiv").style.display = "none";
+}
+
+function downloadReport(bottonId){
+	var url;
+	if(bottonId == "monthlyReportBotton"){
+		var selectedMonth = document.getElementById("monthList").options[monthList.selectedIndex].value;
+		var selectedYear = document.getElementById("yearList").options[yearList.selectedIndex].value;
+		if(selectedMonth == "" || selectedYear == ""){
+			alert("Kindly enter required date.");
+			return false;
+		}
+		//url = "/NisumFoodManagement/downloadMonthlyReport?month="+selectedMonth+"&year="+selectedYear;
+		url = "/downloadMonthlyReport?month="+selectedMonth+"&year="+selectedYear;
+	}else if(bottonId == "dateRangeBotton"){
+		var fromDate = document.getElementById("fromDate").value;
+		var toDate = document.getElementById("toDate").value;
+		if(fromDate == "" || toDate == ""){
+			alert("Kindly enter required date.");
+			return false;
+		}
+		//url = "/NisumFoodManagement/downloadReportBetweenTwoDate?fromDate="+fromDate+"&toDate="+toDate;
+		url = "/downloadReportBetweenTwoDate?fromDate="+fromDate+"&toDate="+toDate;
+	}else if(bottonId == "dateReportBotton"){
+		var date = document.getElementById("selectedDate").value;
+		var food = document.getElementById("foodList").options[foodList.selectedIndex].value;
+		if(date == "" || food == ""){
+			alert("Kindly enter required date.");
+			return false;
+		}
+		//url = "/NisumFoodManagement/downloadSelectedDateReport?date="+date+"&food="+food;
+		url = "/downloadSelectedDateReport?date="+date+"&food="+food;
+	}else if(bottonId == "dateRangeBottonForSuggestion"){
+		var fromDate = document.getElementById("fromDateForSuggestion").value;
+		var toDate = document.getElementById("toDateForSuggestion").value;
+		if(fromDate == "" || toDate == ""){
+			alert("Kindly enter required date.");
+			return false;
+		}
+		//url = "/NisumFoodManagement/downloadReportBetweenTwoDateForSuggestion?fromDate="+fromDate+"&toDate="+toDate;
+		url = "/downloadReportBetweenTwoDateForSuggestion?fromDate="+fromDate+"&toDate="+toDate;
+	}
+	
+	window.location.href = url;
+}
+
+</script>
+</head>
+<body bgcolor="#D5DBDB">
+<div align="right"><a href="" onclick="goBack();">Back</a></div>
+<h2 align="center">*******Nisum Food Management*******</h2>
+</br>
+<div align="center" id="mainDiv">
+<input type="button" id="showMonthReportDiv" value="Report By Month" onclick="showDiv(this.id);"/>
+<input type="button" id="showDateRangeDiv" value="Report Between Two Date" onclick="showDiv(this.id);"/>
+<input type="button" id="showDateDiv" value="Report By Date" onclick="showDiv(this.id);"/>
+<input type="button" id="showSuggestionDiv" value="Suggestion" onclick="showDiv(this.id);"/>
+</div>
+<div align="center" id="monthReportDiv" style="display: none;">
+<fieldset style="width: 250px;">
+  <legend>Monthly Report:</legend>
+<label>Month: </label>
+<select id="monthList">
+  <option value="01">January</option>
+  <option value="02">February</option>
+  <option value="03">March</option>
+  <option value="04">April</option>
+  <option value="05">May</option>
+  <option value="06">June</option>
+  <option value="07">July</option>
+  <option value="08">August</option>
+  <option value="09">September</option>
+  <option value="10">October</option>
+  <option value="11">November</option>
+  <option value="12">December</option>
+</select>
+<label>Year: </label>
+<select id="yearList">
+  <option value="2017">2017</option>
+  <option value="2018">2018</option>
+  <option value="2019">2019</option>
+  <option value="2020">2020</option>
+</select>
+</br></br>
+<input type="button" id="monthlyReportBotton" value="Download Report" onclick="downloadReport(this.id);"/>
+</fieldset>
+</div>
+
+
+<div align="center" id="dateRangeDiv" style="display: none;">
+<fieldset style="width: 250px;">
+  <legend>Report Between Two Date:</legend>
+<label>From: </label>
+<input type="date" id="fromDate"></br></br>
+<label>TO: </label>
+<input type="date" id="toDate" style="margin-right: -7%;">
+</br></br>
+<input type="button" id="dateRangeBotton" value="Download Report" onclick="downloadReport(this.id);"/>
+</fieldset>
+</div>
+
+<p id="completeValue" style="display: none"></p>
+<div id="report" style="margin-top: 2%;"></div>
+
+
+<div align="center" id="dateDiv" style="display: none;">
+<fieldset style="width: 250px;">
+  <legend>Report By date:</legend>
+  <label>Date: </label>
+  <input type="date" id="selectedDate">
+</br>
+<label style="margin-left: -5%;">Food: </label>
+<select id="foodList" style="margin-top:3%; margin-bottom:3%; margin-right-2%; width: 53%;">
+  <option value="breakfast">Breakfast</option>
+  <option value="lunch">Lunch</option>
+  <option value="dinner">Dinner</option>
+</select></br>
+<input type="button" id="dateReportBotton" value="Download Report" onclick="downloadReport(this.id);"/>
+  </fieldset>
+</div>
+
+<div align="center" id="suggestionDiv" style="display: none;">
+<fieldset style="width: 250px;">
+  <legend>Suggestion Between Two Date:</legend>
+<label>From: </label>
+<input type="date" id="fromDateForSuggestion"></br></br>
+<label>TO: </label>
+<input type="date" id="toDateForSuggestion" style="margin-right: -7%;">
+</br></br>
+<input type="button" id="dateRangeBottonForSuggestion" value="Download Report" onclick="downloadReport(this.id);"/>
+</fieldset>
+</div>
+  
+  
+</body>
+</html>
